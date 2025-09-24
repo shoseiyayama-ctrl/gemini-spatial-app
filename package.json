@@ -1,0 +1,12 @@
+{
+  "name": "gemini-spatial-app-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@google/genai": "^0.7.0",
+    "@netlify/functions": "^2.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

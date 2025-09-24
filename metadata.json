@@ -1,0 +1,7 @@
+{
+  "name": "物体色別サンプル",
+  "description": "物体判別テスト",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
