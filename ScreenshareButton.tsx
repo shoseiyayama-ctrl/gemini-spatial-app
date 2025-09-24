@@ -17,14 +17,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {useAtom} from 'jotai';
+import {useAtom, useSetAtom} from 'jotai';
 import {ImageSrcAtom, ShareStreamAtom, StreamTypeAtom} from './atoms';
 import {useResetState} from './hooks';
 
 export function ScreenshareButton() {
-  const [, setStream] = useAtom(ShareStreamAtom);
-  const [, setStreamType] = useAtom(StreamTypeAtom);
-  const [, setImageSrc] = useAtom(ImageSrcAtom);
+  const setStream = useSetAtom(ShareStreamAtom);
+  const setStreamType = useSetAtom(StreamTypeAtom);
+  const setImageSrc = useSetAtom(ImageSrcAtom);
   const resetState = useResetState();
 
   return (

@@ -178,6 +178,11 @@ export function Prompt() {
         textPromptToSend = getGenericPrompt(detectType);
       }
 
+      if (lines.length > 0) {
+        textPromptToSend +=
+          " Pay special attention to the areas marked with drawings.";
+      }
+
       const proxyResponse = await fetch('/.netlify/functions/gemini-proxy', {
         method: 'POST',
         headers: {

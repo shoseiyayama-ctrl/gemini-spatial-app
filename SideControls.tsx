@@ -63,7 +63,7 @@ export function SideControls() {
       </label>
       <WebcamButton />
       <ScreenshareButton />
-      <div className="hidden">
+      <div>
         <button
           className="button flex gap-3 justify-center items-center"
           onClick={() => {

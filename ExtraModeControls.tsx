@@ -17,7 +17,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {useAtom} from 'jotai';
+import {useAtom, useSetAtom} from 'jotai';
 import {
   BoundingBoxes2DAtom,
   BoundingBoxes3DAtom,
@@ -29,6 +29,7 @@ import {
   LinesAtom,
   PointsAtom,
   ShareStreamAtom,
+  stopStreamAtom,
   StreamTypeAtom,
 } from './atoms';
 import {Palette} from './Palette';
@@ -37,14 +38,16 @@ export function ExtraModeControls() {
   const [, setBoundingBoxes2D] = useAtom(BoundingBoxes2DAtom);
   const [, setBoundingBoxes3D] = useAtom(BoundingBoxes3DAtom);
   const [, setBoundingBoxMasks] = useAtom(BoundingBoxMasksAtom);
-  const [stream, setStream] = useAtom(ShareStreamAtom);
-  const [streamType, setStreamType] = useAtom(StreamTypeAtom);
+  const [stream] = useAtom(ShareStreamAtom);
+  const [streamType] = useAtom(StreamTypeAtom);
   const [detectType] = useAtom(DetectTypeAtom);
   const [fov, setFoV] = useAtom(FOVAtom);
   const [, setPoints] = useAtom(PointsAtom);
   const [, _setHoveredBox] = useAtom(HoveredBoxAtom);
   const [drawMode, setDrawMode] = useAtom(DrawModeAtom);
   const [, setLines] = useAtom(LinesAtom);
+  // FIX: Use the dedicated write-only atom to stop the stream, which centralizes the logic and resolves type errors.
+  const stopStream = useSetAtom(stopStreamAtom);
 
   const showExtraBar = stream || detectType === '3D bounding boxes';
 
@@ -92,9 +95,8 @@ export function ExtraModeControls() {
             <button
               className="flex gap-3 text-sm items-center secondary"
               onClick={() => {
-                stream.getTracks().forEach((track) => track.stop());
-                setStream(null);
-                setStreamType(null);
+                // FIX: Call the stopStream atom logic.
+                stopStream();
                 setBoundingBoxes2D([]);
                 setBoundingBoxes3D([]);
                 setBoundingBoxMasks([]);

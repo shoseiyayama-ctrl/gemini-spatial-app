@@ -17,7 +17,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {useAtom} from 'jotai';
+import {useSetAtom} from 'jotai';
 import {
   BoundingBoxes2DAtom,
   BoundingBoxes3DAtom,
@@ -25,19 +25,18 @@ import {
   BumpSessionAtom,
   ImageSentAtom,
   PointsAtom,
-  ShareStreamAtom,
-  StreamTypeAtom,
+  stopStreamAtom,
 } from './atoms';
 
 export function useResetState() {
-  const [, setImageSent] = useAtom(ImageSentAtom);
-  const [, setBoundingBoxes2D] = useAtom(BoundingBoxes2DAtom);
-  const [, setBoundingBoxes3D] = useAtom(BoundingBoxes3DAtom);
-  const [, setBoundingBoxMasks] = useAtom(BoundingBoxMasksAtom);
-  const [, setPoints] = useAtom(PointsAtom);
-  const [, setBumpSession] = useAtom(BumpSessionAtom);
-  const [stream, setStream] = useAtom(ShareStreamAtom);
-  const [, setStreamType] = useAtom(StreamTypeAtom);
+  const setImageSent = useSetAtom(ImageSentAtom);
+  const setBoundingBoxes2D = useSetAtom(BoundingBoxes2DAtom);
+  const setBoundingBoxes3D = useSetAtom(BoundingBoxes3DAtom);
+  const setBoundingBoxMasks = useSetAtom(BoundingBoxMasksAtom);
+  const setPoints = useSetAtom(PointsAtom);
+  const setBumpSession = useSetAtom(BumpSessionAtom);
+  // FIX: Use the dedicated write-only atom to handle stream cleanup.
+  const stopStream = useSetAtom(stopStreamAtom);
 
   return () => {
     setImageSent(false);
@@ -46,10 +45,9 @@ export function useResetState() {
     setBoundingBoxMasks([]);
     setBumpSession((prev) => prev + 1);
     setPoints([]);
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
-      setStreamType(null);
-    }
+    
+    // FIX: Calling the encapsulated logic in stopStreamAtom handles stopping the stream
+    // and resetting related atoms, resolving type errors and race conditions.
+    stopStream();
   };
 }

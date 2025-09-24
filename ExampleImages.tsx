@@ -18,14 +18,15 @@
 // limitations under the License.
 
 import {useAtom} from 'jotai';
-import {ImageSrcAtom, IsUploadedImageAtom} from './atoms';
-import {imageOptions} from './consts';
+import {ImageSrcAtom, IsUploadedImageAtom, imageOptionsAtom} from './atoms';
 import {useResetState} from './hooks';
 
 export function ExampleImages() {
   const [, setImageSrc] = useAtom(ImageSrcAtom);
   const [, setIsUploadedImage] = useAtom(IsUploadedImageAtom);
   const resetState = useResetState();
+  // FIX: Get image options from atom now that they are loaded asynchronously.
+  const [imageOptions] = useAtom(imageOptionsAtom);
   return (
     <div className="flex flex-wrap items-start gap-3 shrink-0 w-[190px]">
       {imageOptions.map((image) => (

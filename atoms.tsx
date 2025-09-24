@@ -22,7 +22,6 @@ import {
   colors,
   defaultPromptParts,
   defaultPrompts,
-  imageOptions,
 } from './consts';
 import {
   BoundingBox2DType,
@@ -31,7 +30,10 @@ import {
   DetectTypes,
 } from './Types';
 
-export const ImageSrcAtom = atom<string | null>(imageOptions[0]);
+// FIX: imageOptions are now loaded async. This atom will hold them.
+export const imageOptionsAtom = atom<string[]>([]);
+// FIX: Initial image is set in App.tsx after images are loaded.
+export const ImageSrcAtom = atom<string | null>(null);
 
 export const ImageSentAtom = atom(false);
 
@@ -69,6 +71,21 @@ export const TemperatureAtom = atom<number>(0.5);
 export const ShareStreamAtom = atom<MediaStream | null>(null);
 
 export const StreamTypeAtom = atom<'webcam' | 'screenshare' | null>(null);
+
+// FIX: Added a write-only atom to encapsulate the logic for stopping and clearing the stream.
+// This avoids side-effects in component logic and setters, and centralizes stream management.
+export const stopStreamAtom = atom(
+  null,
+  (get, set) => {
+    const stream = get(ShareStreamAtom);
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
+    set(ShareStreamAtom, null);
+    set(StreamTypeAtom, null);
+  }
+);
+
 
 export const DrawModeAtom = atom<boolean>(false);
 

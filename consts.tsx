@@ -49,27 +49,31 @@ export const segmentationColors = [
 ];
 export const segmentationColorsRgb = segmentationColors.map((c) => hexToRgb(c));
 
-export const imageOptions: string[] = await Promise.all(
-  [
-    'origami.jpg',
-    'pumpkins.jpg',
-    'clock.jpg',
-    'socks.jpg',
-    'breakfast.jpg',
-    'cat.jpg',
-    'spill.jpg',
-    'fruit.jpg',
-    'baklava.jpg',
-  ].map(async (i) =>
-    URL.createObjectURL(
-      await (
-        await fetch(
-          `https://www.gstatic.com/aistudio/starter-apps/bounding-box/${i}`,
-        )
-      ).blob(),
+// FIX: Removed top-level await to prevent module from being async.
+// The image options are now fetched in App.tsx.
+export const fetchImageOptions = () => {
+  return Promise.all(
+    [
+      'origami.jpg',
+      'pumpkins.jpg',
+      'clock.jpg',
+      'socks.jpg',
+      'breakfast.jpg',
+      'cat.jpg',
+      'spill.jpg',
+      'fruit.jpg',
+      'baklava.jpg',
+    ].map(async (i) =>
+      URL.createObjectURL(
+        await (
+          await fetch(
+            `https://www.gstatic.com/aistudio/starter-apps/bounding-box/${i}`,
+          )
+        ).blob(),
+      ),
     ),
-  ),
-);
+  );
+};
 
 export const lineOptions = {
   size: 8,

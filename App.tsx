@@ -33,9 +33,11 @@ import {
   ImageSrcAtom,
   InitFinishedAtom,
   IsUploadedImageAtom,
+  imageOptionsAtom,
 } from './atoms';
 import {useResetState} from './hooks';
 import {hash} from './utils';
+import {fetchImageOptions} from './consts';
 
 function App() {
   const [, setImageSrc] = useAtom(ImageSrcAtom);
@@ -44,6 +46,18 @@ function App() {
   const [, setBumpSession] = useAtom(BumpSessionAtom);
   const [, setIsUploadedImage] = useAtom(IsUploadedImageAtom);
   const [, setDetectType] = useAtom(DetectTypeAtom);
+  // FIX: imageOptions are now loaded async. This atom will hold them.
+  const [, setImageOptions] = useAtom(imageOptionsAtom);
+
+  // FIX: Fetch image options async and populate atoms.
+  useEffect(() => {
+    fetchImageOptions().then((options) => {
+      setImageOptions(options);
+      if (options.length > 0) {
+        setImageSrc(options[0]);
+      }
+    });
+  }, [setImageOptions, setImageSrc]);
 
   useEffect(() => {
     if (!window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -83,12 +97,12 @@ function App() {
         {initFinished ? <Content /> : null}
         <ExtraModeControls />
       </div>
-      <div className="flex shrink-0 w-full overflow-auto py-6 px-5 gap-6 lg:items-start">
-        <div className="flex flex-col lg:flex-col gap-6 items-center border-r pr-5">
+      <div className="flex flex-col lg:flex-row shrink-0 w-full overflow-auto p-4 gap-4">
+        <div className="flex flex-col gap-4 items-center lg:border-r lg:pr-4">
           <ExampleImages />
           <SideControls />
         </div>
-        <div className="flex flex-row gap-6 grow">
+        <div className="flex flex-row gap-4 grow">
           <DetectTypeSelector />
           <Prompt />
         </div>

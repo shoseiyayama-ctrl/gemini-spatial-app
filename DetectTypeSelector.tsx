@@ -46,7 +46,7 @@ function SelectOption({label}: {label: string}) {
 
   return (
     <button
-      className="py-6 items-center bg-transparent text-center gap-3"
+      className="py-3 px-2 items-center bg-transparent text-center gap-3"
       style={{
         borderColor: detectType === label ? 'var(--accent-color)' : undefined,
         backgroundColor:
